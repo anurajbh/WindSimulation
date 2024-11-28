@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: DefaultWindSettings
   m_EditorClassIdentifier: 
   windZone: {fileID: 5958014161631175296, guid: 54234ed5a6cd30445ac0a65435f1167a, type: 3}
-  defaultWindSpeed: 2
-  defaultTurbulence: 0.5
+  defaultWindSpeed: 4
+  defaultTurbulence: 1
   windMode: 0

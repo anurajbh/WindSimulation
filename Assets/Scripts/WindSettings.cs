@@ -22,11 +22,12 @@ public class WindSettings : ScriptableObject
             return;
         }
         Debug.LogWarning("WindZone not assigned in WindSettings. Creating a new one");
-        GameObject windZoneObject = new GameObject("AutoGenWindZone");
+        GameObject windZoneObject = new GameObject($"AutoGenWindZone_{name}");
         windZone = windZoneObject.AddComponent<WindZone>();
         windZone.mode = windMode;
         windZone.windMain = defaultWindSpeed;
         windZone.windTurbulence = defaultTurbulence;
+        windZone.transform.position = Vector3.zero;
     }
     public float GetWindSpeed()
     {
