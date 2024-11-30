@@ -7,8 +7,10 @@ using UnityEngine;
 public class WindManager : MonoSingleton<WindManager>
 {
     public event Action<WindSettings> OnWindSettingsChanged;
+    public event Action<float> WindUpdater;
     public List<WindSettings> windSettings;
     public WindSettings currentWindSettings;
+    public float noisePeriodicity = 1f;
     void Start()
     {
         if(windSettings.Count <= 0)
@@ -16,13 +18,29 @@ public class WindManager : MonoSingleton<WindManager>
             Debug.Log("Wind Settings list empty! No options in dropdown");
             return;
         }
+        for (int i = 0; i < windSettings.Count; i++)
+        {
+            windSettings[i].EnsureSubscribed();
+        }
         SetWindSettings(windSettings[0]);
         if (null == currentWindSettings)
         {
             Debug.LogError("WindSettings Scriptable Object is not assigned to Wind Manager");
             return;
         }
+        StartCoroutine(InvokeWindUpdator());
     }
+
+    private IEnumerator InvokeWindUpdator()
+    {
+        while (true)
+        {
+            //Debug.Log($"Invoking WindUpdater at time {Time.time}");
+            WindUpdater?.Invoke(Time.time);
+            yield return new WaitForSeconds(noisePeriodicity);
+        }
+    }
+
     /// <summary>
     /// Updates the wind settings for a specific Wind Zone.
     /// Broadcasts changes to all objects linked to the Wind Zone and optionally executes additional logic.
@@ -51,5 +69,53 @@ public class WindManager : MonoSingleton<WindManager>
         }
         currentWindSettings.windZone.windMain = windSpeed;
         currentWindSettings.windZone.windTurbulence = turbulence;
+    }
+    /// <summary>
+    /// Generate Gaussian noise based on Box-Mueller transform. Yeah I didnt know what that meant before today, either.
+    /// </summary>
+    /// <param name="baseValue">the base value passed in by the user</param>
+    /// <param name="standardDeviation">The spread of the Normal Distribution around the base value</param>
+    /// <returns></returns>
+    public float GenerateGaussianNoise(float baseValue, float standardDeviation)
+    {
+        float u1 = UnityEngine.Random.value;
+
+        float u2 = UnityEngine.Random.value;
+        if (Mathf.Epsilon > u1)
+        {
+            u1 = Mathf.Epsilon;
+        }
+        float z0 = Mathf.Sqrt(-2f * Mathf.Log(u1)) * Mathf.Cos(2f * Mathf.PI * u2);
+        return baseValue+standardDeviation*z0;
+    }
+    /// <summary>
+    /// Generate Perlin noise
+    /// </summary>
+    /// <param name="baseValue"></param>
+    /// <param name="variationRange"></param>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public float GeneratePerlinNoise(float baseValue, float variationRange, float time)
+    {
+        float noise = Mathf.PerlinNoise(time, 0.0f);
+        //Above function returns a value in [0,1] range
+        return baseValue + (noise - 0.5f)*2f*variationRange;
+    }
+    /// <summary>
+    /// Generate Wave function Collapse
+    /// </summary>
+    /// <param name="baseValue">Represents starting wind value (speed or turbulence) </param>
+    /// <param name="variationRange"> Represents a range of variation</param>
+    /// <param name="time">Temporal input for transition over time</param>
+    /// <returns></returns>
+    public float WaveFunctionCollapse(float baseValue, float variationRange, float time)
+    {
+        //local constant for 10% constraint (feel free to change it if you'd like, fellow coder)
+        float c = 0.1f;
+        float minNeighbour = baseValue - (variationRange * c);
+        float maxNeighbour = baseValue + (variationRange * c);
+        float constrainedValue = UnityEngine.Random.Range(minNeighbour, maxNeighbour);
+        float temporalModifier = Mathf.Sin(2 * Mathf.PI / 10f * time)*variationRange;
+        return constrainedValue + temporalModifier;
     }
 }

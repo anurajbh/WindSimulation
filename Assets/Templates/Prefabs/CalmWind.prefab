@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5603930680744695124}
   - component: {fileID: 5958014161631175296}
   m_Layer: 0
-  m_Name: WindZone
+  m_Name: CalmWind
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,7 @@ WindZone:
   m_Enabled: 1
   m_Mode: 0
   m_Radius: 20
-  m_WindMain: 4.6026177
-  m_WindTurbulence: 1.5
+  m_WindMain: 2
+  m_WindTurbulence: 0.2
   m_WindPulseMagnitude: 0.3
   m_WindPulseFrequency: 0.5

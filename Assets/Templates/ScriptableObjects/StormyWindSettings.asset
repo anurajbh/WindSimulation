@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: StormyWindSettings
   m_EditorClassIdentifier: 
   windZone: {fileID: 0}
-  defaultWindSpeed: 8
-  defaultTurbulence: 3
+  defaultWindSpeed: 15
+  defaultTurbulence: 4
   windMode: 0
+  gaussianWeight: 0.2976761
+  perlinWeight: 0.31105706
+  wfcWeight: 0.39126682
+  variationRange: 5

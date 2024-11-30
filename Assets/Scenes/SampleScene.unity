@@ -738,7 +738,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 3
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2325,8 +2325,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 963194228}
   - {fileID: 705507995}
+  - {fileID: 4804874790857780446}
   - {fileID: 8596653608023700578}
   - {fileID: 1446802340}
   - {fileID: 666332081}
   - {fileID: 1036076604}
-  - {fileID: 4804874790857780446}
