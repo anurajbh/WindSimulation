@@ -77,7 +77,7 @@ public class WindSlider : MonoBehaviour
 
             case WindProperty.Turbulence:
                 windSettings.SetTurbulenceValue(value);
-                Debug.Log($"Updated turbulence to {value}");
+                //Debug.Log($"Updated turbulence to {value}");
                 break;
 
             case WindProperty.Interval:

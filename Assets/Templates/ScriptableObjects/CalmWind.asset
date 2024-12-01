@@ -20,6 +20,9 @@ MonoBehaviour:
   minWindSpeed: 0
   maxTurbulence: 1
   minTurbulence: 0
+  defaultAirDensity: 1.225
+  calculateAirDensityDynamically: 1
+  temperature: 288.15
   gaussianWeight: 0.72052854
   perlinWeight: 0.21724121
   wfcWeight: 0.062230263

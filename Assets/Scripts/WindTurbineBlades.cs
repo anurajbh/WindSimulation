@@ -44,7 +44,7 @@ public class WindTurbineBlades : MonoBehaviour
         associatedWindSettings = windSettings;
         if (windSettings == associatedWindSettings)
         {
-            Debug.Log($"Wind settings updated for {gameObject.name}. New wind speed: {windSettings.windZone.windMain}");
+            //Debug.Log($"Wind settings updated for {gameObject.name}. New wind speed: {windSettings.windZone.windMain}");
             // Optionally, add logic for visual/sound effects, etc.
         }
     }

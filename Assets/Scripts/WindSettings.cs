@@ -18,6 +18,12 @@ public class WindSettings : ScriptableObject
     public float minWindSpeed = 0.0f;
     public float maxTurbulence = 30.0f;
     public float minTurbulence = 0.0f;
+    public float defaultAirDensity = 1.225f;
+    public bool calculateAirDensityDynamically = true; // Enable dynamic calculation
+    public float temperature = 288.15f; // Standard temperature (15°C in Kelvin)
+
+    private const float R = 287.05f; // Specific gas constant for dry air
+    private const float seaLevelPressure = 101325f; // Pressure at sea level in Pa
 
     [Header("Default Noise Weight percentage (Sum is always 1)")]
     public float gaussianWeight = 0.5f;
@@ -51,6 +57,32 @@ public class WindSettings : ScriptableObject
                 wfcWeight = 1f / 3f;
             }
         }
+    }
+
+    public float GetAirDensity(Vector3 turbinePosition)
+    {
+        if (!calculateAirDensityDynamically)
+        {
+            return defaultAirDensity;
+        }
+
+        // Calculate altitude based on world Y-coordinate
+        float altitude = Mathf.Max(0, turbinePosition.y); // Ensure altitude is non-negative
+
+        // Calculate air pressure at the given altitude
+        float pressure = CalculatePressure(altitude);
+
+        // Return air density based on pressure and temperature
+        return pressure / (R * temperature);
+    }
+
+    private float CalculatePressure(float altitude)
+    {
+        // Simplified barometric formula
+        float gravity = 9.80665f; // Acceleration due to gravity in m/s²
+        float molarMass = 0.0289644f; // Molar mass of Earth's air in kg/mol
+
+        return seaLevelPressure * Mathf.Exp(-gravity * molarMass * altitude / (R * temperature));
     }
     public void EnsureSubscribed()
     {
@@ -94,7 +126,7 @@ public class WindSettings : ScriptableObject
             return;
         }
         windZone.windMain = Mathf.Clamp(value, minWindSpeed, maxWindSpeed);
-        Debug.Log($"New windspeed: {windZone.windMain}");
+        //Debug.Log($"New windspeed: {windZone.windMain}");
     }
     public void SetTurbulenceValue(float value)
     {
@@ -104,7 +136,7 @@ public class WindSettings : ScriptableObject
             return;
         }
         windZone.windTurbulence = Mathf.Clamp(value, minTurbulence, maxTurbulence);
-        Debug.Log($"New turbulence: {windZone.windTurbulence}");
+        //Debug.Log($"New turbulence: {windZone.windTurbulence}");
     }
     public void ApplyWindDynamically(float deltaTime)
     {
