@@ -14,6 +14,10 @@ public class WindSettings : ScriptableObject
     public float defaultWindSpeed = 2.0f;
     public float defaultTurbulence = 0.5f;
     public WindZoneMode windMode = WindZoneMode.Directional;
+    public float maxWindSpeed = 30.0f;
+    public float minWindSpeed = 0.0f;
+    public float maxTurbulence = 30.0f;
+    public float minTurbulence = 0.0f;
 
     [Header("Default Noise Weight percentage (Sum is always 1)")]
     public float gaussianWeight = 0.5f;
@@ -22,6 +26,10 @@ public class WindSettings : ScriptableObject
 
     [Header("Range of variation for noise values")]
     public float variationRange = 2.0f;
+
+    [Header("Randomization Settings")]
+    public float randomSpeedRange = 1.0f;
+    public float randomTurbulenceRange = 0.5f;
 
     void OnValidate()
     {
@@ -82,11 +90,21 @@ public class WindSettings : ScriptableObject
     {
         if (null == windZone)
         {
-            Debug.LogError("No wind zone assigned to wind settings!");
+            Debug.LogError("Cannot set speed - No wind zone assigned to wind settings!");
             return;
         }
-        windZone.windMain = value;
-        Debug.Log($"new windspeed {windZone.windMain}");
+        windZone.windMain = Mathf.Clamp(value, minWindSpeed, maxWindSpeed);
+        Debug.Log($"New windspeed: {windZone.windMain}");
+    }
+    public void SetTurbulenceValue(float value)
+    {
+        if (null == windZone)
+        {
+            Debug.LogError("Cannot set turbulence - No wind zone assigned to wind settings!");
+            return;
+        }
+        windZone.windTurbulence = Mathf.Clamp(value, minTurbulence, maxTurbulence);
+        Debug.Log($"New turbulence: {windZone.windTurbulence}");
     }
     public void ApplyWindDynamically(float deltaTime)
     {
@@ -95,10 +113,17 @@ public class WindSettings : ScriptableObject
             Debug.Log("WindZone not initialized! Ensure InitWindZone() is called");
             return;
         }
-        float windValue = 0;
-        windValue += gaussianWeight * WindManager.Instance.GenerateGaussianNoise(defaultWindSpeed, defaultTurbulence);
-        windValue += perlinWeight * WindManager.Instance.GeneratePerlinNoise(defaultWindSpeed, variationRange, deltaTime);
-        windValue += wfcWeight * WindManager.Instance.WaveFunctionCollapse(defaultWindSpeed, variationRange, deltaTime);
+        float windValue = windZone.windMain;
+        windValue += gaussianWeight * WindManager.Instance.GenerateGaussianNoise(0, randomSpeedRange);
+        windValue += perlinWeight * WindManager.Instance.GeneratePerlinNoise(0, randomSpeedRange, deltaTime);
+        windValue += wfcWeight * WindManager.Instance.WaveFunctionCollapse(0, randomSpeedRange, deltaTime);
         SetWindSpeed(windValue);
+
+        float turbulenceValue = windZone.windTurbulence;
+        turbulenceValue += gaussianWeight * WindManager.Instance.GenerateGaussianNoise(0, randomTurbulenceRange);
+        turbulenceValue += perlinWeight * WindManager.Instance.GeneratePerlinNoise(0, randomTurbulenceRange, deltaTime);
+        turbulenceValue += wfcWeight * WindManager.Instance.WaveFunctionCollapse(0, randomTurbulenceRange, deltaTime);
+
+        SetTurbulenceValue(turbulenceValue);
     }
 }

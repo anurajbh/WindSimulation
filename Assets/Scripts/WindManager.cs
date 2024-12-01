@@ -10,7 +10,10 @@ public class WindManager : MonoSingleton<WindManager>
     public event Action<float> WindUpdater;
     public List<WindSettings> windSettings;
     public WindSettings currentWindSettings;
-    public float noisePeriodicity = 1f;
+    [Header("Default Wind Behavior Settings")]
+    public float windChangeInterval = 1f;
+
+    private Coroutine windUpdaterCoroutine;
     void Start()
     {
         if(windSettings.Count <= 0)
@@ -28,7 +31,7 @@ public class WindManager : MonoSingleton<WindManager>
             Debug.LogError("WindSettings Scriptable Object is not assigned to Wind Manager");
             return;
         }
-        StartCoroutine(InvokeWindUpdator());
+        windUpdaterCoroutine = StartCoroutine(InvokeWindUpdator());
     }
 
     private IEnumerator InvokeWindUpdator()
@@ -37,10 +40,18 @@ public class WindManager : MonoSingleton<WindManager>
         {
             //Debug.Log($"Invoking WindUpdater at time {Time.time}");
             WindUpdater?.Invoke(Time.time);
-            yield return new WaitForSeconds(noisePeriodicity);
+            yield return new WaitForSeconds(windChangeInterval);
         }
     }
-
+    public void SetWindChangeInterval(float newInterval)
+    {
+        windChangeInterval = Mathf.Max(0.01f, newInterval); // Prevent zero or negative intervals
+        if (windUpdaterCoroutine != null)
+        {
+            StopCoroutine(windUpdaterCoroutine); // Stop the currently running coroutine
+        }
+        windUpdaterCoroutine = StartCoroutine(InvokeWindUpdator()); // Start a new coroutine with the updated interval
+    }
     /// <summary>
     /// Updates the wind settings for a specific Wind Zone.
     /// Broadcasts changes to all objects linked to the Wind Zone and optionally executes additional logic.
@@ -49,6 +60,12 @@ public class WindManager : MonoSingleton<WindManager>
     /// <param name="onSettingsChanged">An optional callback to execute additional logic after updating the Wind Zone.</param>
     public void SetWindSettings(WindSettings newWindSettings)
     {
+        if(null == newWindSettings)
+        {
+            Debug.LogError("Provided wind settings are null");
+            return;
+        }
+        newWindSettings.EnsureSubscribed(); // Ensure it's subscribed to event
         currentWindSettings = newWindSettings;
         if(null == currentWindSettings)
         {

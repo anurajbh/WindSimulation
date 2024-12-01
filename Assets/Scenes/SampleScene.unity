@@ -736,7 +736,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1157256043}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 3
+  m_MaxValue: 30
   m_WholeNumbers: 0
   m_Value: 1
   m_OnValueChanged:
@@ -756,6 +756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   windSettings: {fileID: 11400000, guid: 2de56347cc7a2eb4c899d99b739a9fc3, type: 2}
   slider: {fileID: 279435963}
+  propertyToControl: 0
 --- !u!1 &330364791
 GameObject:
   m_ObjectHideFlags: 0

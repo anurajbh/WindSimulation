@@ -1,45 +1,97 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class WindSlider : MonoBehaviour
 {
-    public WindSettings windSettings;
-    public Slider slider;
+    public WindSettings windSettings; // The ScriptableObject containing wind properties
+    public Slider slider;             // The slider UI component
+
+    public enum WindProperty { Speed, Turbulence, Interval }
+    public WindProperty propertyToControl = WindProperty.Speed; // Selectable property
+
     void Start()
     {
-        Debug.Log("Searching for wind settings");
-        if(null == windSettings)
+        Debug.Log("Initializing WindSlider...");
+
+        if (slider == null)
         {
-            Debug.LogError("Wind Settings Scriptable Object not assigned to Slider");
+            slider = GetComponent<Slider>();
+            if (slider == null)
+            {
+                Debug.LogWarning("No slider found. Creating one dynamically.");
+                EnsureCanvasAndSlider();
+            }
         }
-        Debug.Log("Searching for wind slider");
-        slider = GetComponent<Slider>();
-        if(null == slider)
-        {
-            Debug.LogWarning("No slider found. Creating one");
-            EnsureCanvasAndSlider();
-        }
-        slider.value = windSettings.GetWindSpeed();
-        slider.onValueChanged.AddListener(UpdateWindStrength);
+
+        // Subscribe to WindManager updates
+        WindManager.Instance.OnWindSettingsChanged += SyncSliderWithWindSettings;
+        // Initialize slider value based on the selected property
+        SyncSliderWithWindSettings(WindManager.Instance.currentWindSettings);
+
+        // Add listener to handle slider changes
+        slider.onValueChanged.AddListener(UpdateWindProperty);
     }
 
-    void UpdateWindStrength(float value)
+
+    private void OnDestroy()
     {
-        if (null == windSettings)
+        WindManager.Instance.OnWindSettingsChanged -= SyncSliderWithWindSettings;
+    }
+    public void SyncSliderWithWindSettings(WindSettings newWindSettings)
+    {
+        if (newWindSettings == null)
         {
-            Debug.LogError("Wind Settings Scriptable Object missing in slider");
+            Debug.LogError("No wind settings assigned to slider");
             return;
         }
-        windSettings.SetWindSpeed(value);
+        windSettings = newWindSettings;
+        switch (propertyToControl)
+        {
+            case WindProperty.Speed:
+                slider.value = windSettings.GetWindSpeed();
+                slider.minValue = windSettings.minWindSpeed;
+                slider.maxValue = windSettings.maxWindSpeed;
+                break;
+
+            case WindProperty.Turbulence:
+                slider.value = windSettings.defaultTurbulence;
+                slider.minValue = windSettings.minTurbulence;
+                slider.maxValue = windSettings.maxTurbulence;
+                break;
+
+            case WindProperty.Interval:
+                slider.value = WindManager.Instance.windChangeInterval;
+                break;
+        }
     }
+
+    void UpdateWindProperty(float value)
+    {
+        windSettings = WindManager.Instance.currentWindSettings;
+        switch (propertyToControl)
+        {
+            case WindProperty.Speed:
+                windSettings.SetWindSpeed(value);
+                break;
+
+            case WindProperty.Turbulence:
+                windSettings.SetTurbulenceValue(value);
+                Debug.Log($"Updated turbulence to {value}");
+                break;
+
+            case WindProperty.Interval:
+                WindManager.Instance.SetWindChangeInterval(value);
+                break;
+        }
+    }
+
     void EnsureCanvasAndSlider()
     {
         Canvas canvas = FindObjectOfType<Canvas>();
-        if (null == canvas)
+        if (canvas == null)
         {
-            Debug.Log("Missing Canvas! Creating one");
+            Debug.Log("No Canvas found! Creating a new one.");
             canvas = CreateNewCanvas();
         }
         CreateSlider(canvas);
@@ -50,7 +102,7 @@ public class WindSlider : MonoBehaviour
         GameObject sliderObject = new GameObject("WindSlider");
         sliderObject.transform.SetParent(canvas.transform, false);
 
-        Slider slider = sliderObject.AddComponent<Slider>();
+        slider = sliderObject.AddComponent<Slider>();
         RectTransform rt = sliderObject.GetComponent<RectTransform>();
         rt.sizeDelta = new Vector2(200, 20);
         rt.anchoredPosition = new Vector2(0, -100);

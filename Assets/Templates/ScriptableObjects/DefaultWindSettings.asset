@@ -16,7 +16,13 @@ MonoBehaviour:
   defaultWindSpeed: 6
   defaultTurbulence: 1.5
   windMode: 0
+  maxWindSpeed: 10
+  minWindSpeed: 4
+  maxTurbulence: 5
+  minTurbulence: 1
   gaussianWeight: 0.39444634
   perlinWeight: 0.4083305
   wfcWeight: 0.1972232
   variationRange: 2
+  randomSpeedRange: 1
+  randomTurbulenceRange: 0.5
