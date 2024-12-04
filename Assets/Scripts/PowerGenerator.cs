@@ -18,7 +18,7 @@ public class PowerGenerator : MonoBehaviour
     {
         efficiency = Mathf.Clamp(efficiency, Mathf.Epsilon, 1f);
         bladeRadius = CalculateBladeRadius();
-        Debug.Log($"Blade radius calculated: {bladeRadius}");
+        Debug.Log($"Blade radius calculated: {bladeRadius} m");
         if (null == WindManager.Instance)
         {
             Debug.Log("No Wind Manager");
@@ -53,13 +53,13 @@ public class PowerGenerator : MonoBehaviour
             if (meshRenderer != null)
             {
                 float radius = meshRenderer.bounds.extents.z; // Assuming Z-axis is the blade length
-                Debug.Log($"Found MeshRenderer. Calculated radius: {radius}");
+                Debug.Log($"Found MeshRenderer. Calculated radius: {radius} m");
                 maxRadius = Mathf.Max(maxRadius, radius);
             }
             else if (collider != null)
             {
                 float radius = collider.bounds.extents.z; // Assuming Z-axis is the blade length
-                Debug.Log($"Found Collider. Calculated radius: {radius}");
+                Debug.Log($"Found Collider. Calculated radius: {radius} m");
                 maxRadius = Mathf.Max(maxRadius, radius);
             }
             else
@@ -94,7 +94,7 @@ public class PowerGenerator : MonoBehaviour
         currentPowerOutput = 0.5f * airDensity * sweptArea * Mathf.Pow(windSpeed, 3) * efficiency;
 
         totalEnergyProduced += currentPowerOutput * deltaTime;
-        Debug.Log($"Current air density : {airDensity} Power: {currentPowerOutput} W, Total Energy prduced : {totalEnergyProduced} J");
+        Debug.Log($"Wind Speed : {windSpeed} Swept Area : {sweptArea} Current air density : {airDensity} Power: {currentPowerOutput/1000} KW, Total Energy prduced : {totalEnergyProduced} J Time Elapsed : {deltaTime}");
 
     }
     public float GetPowerOutput(float power)

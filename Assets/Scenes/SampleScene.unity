@@ -406,6 +406,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 119813466}
   m_CullTransparentMesh: 1
+--- !u!1 &224352245 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7210337124475318529, guid: 866f198516b453f43b2488671803119e, type: 3}
+  m_PrefabInstance: {fileID: 1946397125}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &224352247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 224352245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 660d9e7470fc2924d8d6ef313956b1af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  efficiency: 0.2
+  currentPowerOutput: 0
+  totalEnergyProduced: 0
+  bladeRadius: 0
 --- !u!1 &229009049
 GameObject:
   m_ObjectHideFlags: 0
@@ -2132,6 +2153,74 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779045052}
   m_CullTransparentMesh: 1
+--- !u!1001 &1946397125
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.57
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
+    - target: {fileID: 963499694230850096, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3388167275530548020, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: m_Name
+      value: Wind_Turbine (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7959279143562907456, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: baseSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7959279143562907456, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: associatedWindSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: 2de56347cc7a2eb4c899d99b739a9fc3, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7210337124475318529, guid: 866f198516b453f43b2488671803119e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 224352247}
+  m_SourcePrefab: {fileID: 100100000, guid: 866f198516b453f43b2488671803119e, type: 3}
 --- !u!1 &2123717573
 GameObject:
   m_ObjectHideFlags: 0
@@ -2333,6 +2422,10 @@ PrefabInstance:
       value: Wind_Turbine
       objectReference: {fileID: 0}
     - target: {fileID: 7959279143562907456, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: baseSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7959279143562907456, guid: 866f198516b453f43b2488671803119e, type: 3}
       propertyPath: associatedWindSettings
       value: 
       objectReference: {fileID: 11400000, guid: 2de56347cc7a2eb4c899d99b739a9fc3, type: 2}
@@ -2352,6 +2445,7 @@ SceneRoots:
   - {fileID: 705507995}
   - {fileID: 4804874790857780446}
   - {fileID: 8596653608023700578}
+  - {fileID: 1946397125}
   - {fileID: 1446802340}
   - {fileID: 666332081}
   - {fileID: 1036076604}

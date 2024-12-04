@@ -42,7 +42,7 @@ WindZone:
   m_Enabled: 1
   m_Mode: 0
   m_Radius: 20
-  m_WindMain: 4
-  m_WindTurbulence: 2.7497609
+  m_WindMain: 7.1963344
+  m_WindTurbulence: 3.222099
   m_WindPulseMagnitude: 0.3
   m_WindPulseFrequency: 0.5

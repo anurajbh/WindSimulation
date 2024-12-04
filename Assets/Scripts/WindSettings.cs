@@ -10,7 +10,7 @@ public class WindSettings : ScriptableObject
     [Header("Wind Zone reference")]
     public WindZone windZone;
 
-    [Header("Default Wind Settings")]
+    [Header("Default Wind Settings (all metric units)")]
     public float defaultWindSpeed = 2.0f;
     public float defaultTurbulence = 0.5f;
     public WindZoneMode windMode = WindZoneMode.Directional;
