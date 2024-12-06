@@ -116,17 +116,28 @@ public class WindSettings : ScriptableObject
     }
     public float GetWindSpeed()
     {
-        return null == windZone ? defaultWindSpeed : windZone.windMain;
+        if(null == windZone)
+        {
+            Debug.Log("No wind zone");
+            return defaultWindSpeed;
+        }
+        //Debug.Log($"Accessing windMain: {windZone.windMain}");
+        return windZone.windMain;
     }
     public void SetWindSpeed(float value)
     {
-        if (null == windZone)
+        if (windZone == null)
         {
             Debug.LogError("Cannot set speed - No wind zone assigned to wind settings!");
             return;
         }
-        windZone.windMain = Mathf.Clamp(value, minWindSpeed, maxWindSpeed);
-        //Debug.Log($"New windspeed: {windZone.windMain}");
+
+        float clampedValue = Mathf.Clamp(value, minWindSpeed, maxWindSpeed);
+        if (Mathf.Abs(windZone.windMain - clampedValue) > Mathf.Epsilon)
+        {
+            windZone.windMain = clampedValue;
+            //Debug.Log($"Updated WindMain to: {windZone.windMain}");
+        }
     }
     public void SetTurbulenceValue(float value)
     {
@@ -145,10 +156,12 @@ public class WindSettings : ScriptableObject
             Debug.Log("WindZone not initialized! Ensure InitWindZone() is called");
             return;
         }
-        float windValue = windZone.windMain;
+        float initialWindMain = windZone.windMain;
+        float windValue = initialWindMain;
         windValue += gaussianWeight * WindManager.Instance.GenerateGaussianNoise(0, randomSpeedRange);
         windValue += perlinWeight * WindManager.Instance.GeneratePerlinNoise(0, randomSpeedRange, deltaTime);
         windValue += wfcWeight * WindManager.Instance.WaveFunctionCollapse(0, randomSpeedRange, deltaTime);
+        //Debug.Log($"Dynamic Update: Initial={initialWindMain}, New={windZone.windMain}");
         SetWindSpeed(windValue);
 
         float turbulenceValue = windZone.windTurbulence;

@@ -14,18 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   windZone: {fileID: 0}
   defaultWindSpeed: 2
-  defaultTurbulence: 0.2
+  defaultTurbulence: 0.1
   windMode: 0
-  maxWindSpeed: 5
-  minWindSpeed: 0
-  maxTurbulence: 1
-  minTurbulence: 0
+  maxWindSpeed: 3
+  minWindSpeed: 1
+  maxTurbulence: 0.2
+  minTurbulence: 0.05
   defaultAirDensity: 1.225
   calculateAirDensityDynamically: 1
   temperature: 288.15
-  gaussianWeight: 0.72052854
-  perlinWeight: 0.21724121
-  wfcWeight: 0.062230263
-  variationRange: 0.5
-  randomSpeedRange: 1
+  gaussianWeight: 0.4694899
+  perlinWeight: 0.23076978
+  wfcWeight: 0.29974034
+  variationRange: 1
+  randomSpeedRange: 2
   randomTurbulenceRange: 0.5

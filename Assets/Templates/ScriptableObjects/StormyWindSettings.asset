@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: StormyWindSettings
   m_EditorClassIdentifier: 
   windZone: {fileID: 0}
-  defaultWindSpeed: 15
-  defaultTurbulence: 4
+  defaultWindSpeed: 25
+  defaultTurbulence: 2.5
   windMode: 0
-  maxWindSpeed: 30
-  minWindSpeed: 10
-  maxTurbulence: 15
+  maxWindSpeed: 70
+  minWindSpeed: 15
+  maxTurbulence: 14
   minTurbulence: 3
   defaultAirDensity: 1.225
   calculateAirDensityDynamically: 1
   temperature: 288.15
-  gaussianWeight: 0.2976761
-  perlinWeight: 0.31105706
-  wfcWeight: 0.39126682
+  gaussianWeight: 0.41154236
+  perlinWeight: 0.29986587
+  wfcWeight: 0.28859174
   variationRange: 5
-  randomSpeedRange: 1
-  randomTurbulenceRange: 0.5
+  randomSpeedRange: 10
+  randomTurbulenceRange: 5

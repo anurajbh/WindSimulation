@@ -25,6 +25,7 @@ public class PowerGenerator : MonoBehaviour
             return;
         }
         WindManager.Instance.WindUpdater += CalculateWindPower;
+        TurbineSelectDropdown.Instance.RegisterTurbine(this);
     }
     private void OnDestroy()
     {
@@ -34,15 +35,22 @@ public class PowerGenerator : MonoBehaviour
             return;
         }
         WindManager.Instance.WindUpdater -= CalculateWindPower;
-    
+        if (null == TurbineSelectDropdown.Instance)
+        {
+            Debug.Log("No Turbine Manager");
+            return;
+        }
+        TurbineSelectDropdown.Instance.DeregisterTurbine(this);
+
     }
     float CalculateBladeRadius()
     {
-        if(transform.childCount == 0)
+        if (transform.childCount == 0)
         {
             Debug.LogError("Attach this script to a turbine parent object! No blades found");
             return 0f;
         }
+
         float maxRadius = 0f; // To track the largest radius among the children
 
         foreach (Transform child in transform)
@@ -52,13 +60,13 @@ public class PowerGenerator : MonoBehaviour
 
             if (meshRenderer != null)
             {
-                float radius = meshRenderer.bounds.extents.z; // Assuming Z-axis is the blade length
+                float radius = meshRenderer.bounds.extents.y; // Assuming Y-axis represents blade length
                 Debug.Log($"Found MeshRenderer. Calculated radius: {radius} m");
                 maxRadius = Mathf.Max(maxRadius, radius);
             }
             else if (collider != null)
             {
-                float radius = collider.bounds.extents.z; // Assuming Z-axis is the blade length
+                float radius = collider.bounds.extents.y; // Assuming Y-axis represents blade length
                 Debug.Log($"Found Collider. Calculated radius: {radius} m");
                 maxRadius = Mathf.Max(maxRadius, radius);
             }
@@ -94,11 +102,27 @@ public class PowerGenerator : MonoBehaviour
         currentPowerOutput = 0.5f * airDensity * sweptArea * Mathf.Pow(windSpeed, 3) * efficiency;
 
         totalEnergyProduced += currentPowerOutput * deltaTime;
-        Debug.Log($"Wind Speed : {windSpeed} Swept Area : {sweptArea} Current air density : {airDensity} Power: {currentPowerOutput/1000} KW, Total Energy prduced : {totalEnergyProduced} J Time Elapsed : {deltaTime}");
+        //Debug.Log($"Wind Speed : {windSpeed} Swept Area : {sweptArea} Current air density : {airDensity} Power: {currentPowerOutput/1000} KW, Total Energy prduced : {totalEnergyProduced} J Time Elapsed : {deltaTime}");
 
     }
     public float GetPowerOutput(float power)
     {
         return currentPowerOutput; 
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, CalculateBladeRadius());
+    }
+    private void OnEnable()
+    {
+        if (TurbineSelectDropdown.Instance != null)
+            TurbineSelectDropdown.Instance.RegisterTurbine(this);
+    }
+
+    private void OnDisable()
+    {
+        if (TurbineSelectDropdown.Instance != null)
+            TurbineSelectDropdown.Instance.DeregisterTurbine(this);
     }
 }

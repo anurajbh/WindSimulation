@@ -9,7 +9,7 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     {
         get
         {
-            if (_instance == null)
+            if (_instance == null && !_isShuttingDown)
             {
                 // Try to find an existing instance in the scene
                 _instance = FindObjectOfType<T>();
@@ -36,5 +36,16 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
             Debug.LogWarning($"Duplicate instance of {typeof(T)} detected. Destroying {gameObject.name}.");
             Destroy(gameObject);
         }
+    }
+    private static bool _isShuttingDown = false;
+
+    private void OnApplicationQuit()
+    {
+        _isShuttingDown = true;
+    }
+
+    private void OnDestroy()
+    {
+        _isShuttingDown = true;
     }
 }

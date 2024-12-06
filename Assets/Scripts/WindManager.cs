@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-
+public enum WindProperty { Speed, Turbulence, Interval }
 public class WindManager : MonoSingleton<WindManager>
 {
     public event Action<WindSettings> OnWindSettingsChanged;
@@ -72,7 +72,7 @@ public class WindManager : MonoSingleton<WindManager>
             Debug.LogError("Failed to change wind settings.");
             return;
         }
-        currentWindSettings.InitWindZone();
+        //currentWindSettings.InitWindZone();
         currentWindSettings.windZone.BroadcastMessage("OnWindSettingsChanged", currentWindSettings, SendMessageOptions.DontRequireReceiver);
         OnWindSettingsChanged?.Invoke(currentWindSettings);
         

@@ -7,7 +7,6 @@ public class WindSlider : MonoBehaviour
     public WindSettings windSettings; // The ScriptableObject containing wind properties
     public Slider slider;             // The slider UI component
 
-    public enum WindProperty { Speed, Turbulence, Interval }
     public WindProperty propertyToControl = WindProperty.Speed; // Selectable property
 
     void Start()
@@ -36,6 +35,10 @@ public class WindSlider : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (null == WindManager.Instance)
+        {
+            return;
+        }
         WindManager.Instance.OnWindSettingsChanged -= SyncSliderWithWindSettings;
     }
     public void SyncSliderWithWindSettings(WindSettings newWindSettings)
@@ -46,22 +49,32 @@ public class WindSlider : MonoBehaviour
             return;
         }
         windSettings = newWindSettings;
+
+        float currentValue = slider.value; // Preserve slider's current value
+
         switch (propertyToControl)
         {
             case WindProperty.Speed:
-                slider.value = windSettings.GetWindSpeed();
                 slider.minValue = windSettings.minWindSpeed;
                 slider.maxValue = windSettings.maxWindSpeed;
+                slider.value = Mathf.Clamp(currentValue, windSettings.minWindSpeed, windSettings.maxWindSpeed);
+                Debug.Log($"Syncing Speed: min={windSettings.minWindSpeed}, max={windSettings.maxWindSpeed}, current={slider.value}");
                 break;
 
             case WindProperty.Turbulence:
-                slider.value = windSettings.defaultTurbulence;
                 slider.minValue = windSettings.minTurbulence;
                 slider.maxValue = windSettings.maxTurbulence;
+                slider.value = Mathf.Clamp(currentValue, windSettings.minTurbulence, windSettings.maxTurbulence);
+                Debug.Log($"Syncing Turbulence: min={windSettings.minTurbulence}, max={windSettings.maxTurbulence}, current={slider.value}");
                 break;
 
             case WindProperty.Interval:
                 slider.value = WindManager.Instance.windChangeInterval;
+                Debug.Log($"Syncing Interval: current={slider.value}");
+                break;
+
+            default:
+                Debug.LogError("Invalid property");
                 break;
         }
     }
@@ -117,4 +130,56 @@ public class WindSlider : MonoBehaviour
         canvasObject.AddComponent<GraphicRaycaster>();
         return canvas;
     }
+    public void SetPropertyToControl(WindProperty newProperty)
+    {
+        if (propertyToControl == newProperty)
+        {
+            Debug.Log("Slider property already set. Skipping update.");
+            return; // Avoid unnecessary re-syncs
+        }
+
+        // Update the property to control
+        propertyToControl = newProperty;
+
+        // Detach the listener to avoid feedback loops
+        slider.onValueChanged.RemoveAllListeners();
+
+        // Retrieve and sync the new property's min, max, and current value
+        float newValue = 0f;
+        switch (propertyToControl)
+        {
+            case WindProperty.Speed:
+                slider.minValue = windSettings.minWindSpeed;
+                slider.maxValue = windSettings.maxWindSpeed;
+                newValue = Mathf.Clamp(windSettings.GetWindSpeed(), slider.minValue, slider.maxValue);
+                break;
+            case WindProperty.Turbulence:
+                slider.minValue = windSettings.minTurbulence;
+                slider.maxValue = windSettings.maxTurbulence;
+                newValue = Mathf.Clamp(
+                    windSettings.windZone != null ? windSettings.windZone.windTurbulence : windSettings.defaultTurbulence,
+                    slider.minValue,
+                    slider.maxValue
+                );
+                break;
+            case WindProperty.Interval:
+                slider.minValue = 0.1f; // Example range for intervals
+                slider.maxValue = 10f;
+                newValue = Mathf.Clamp(WindManager.Instance.windChangeInterval, slider.minValue, slider.maxValue);
+                break;
+            default:
+                Debug.LogError($"Invalid property {propertyToControl}");
+                return;
+        }
+
+        // Set the slider to the new value for the selected property
+        slider.SetValueWithoutNotify(newValue);
+
+        // Reattach the listener
+        slider.onValueChanged.AddListener(UpdateWindProperty);
+
+        // Sync the slider visually
+        //Debug.Log($"Updated Slider: min={slider.minValue}, max={slider.maxValue}, value={newValue}");
+    }
+
 }
