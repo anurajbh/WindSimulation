@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7026444309520184442}
   - component: {fileID: 5702652699830965532}
   - component: {fileID: 6098652976290880091}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Roof
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 4506795447073506964}
   - component: {fileID: 1476637478300865971}
   - component: {fileID: 6925797739256202344}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Blade1 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 963499694230850096}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wind_Turbine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -256,7 +256,7 @@ GameObject:
   - component: {fileID: 8950301507076657267}
   - component: {fileID: 3395905703695806981}
   - component: {fileID: 1566050364167799118}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Blade1 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +361,7 @@ GameObject:
   - component: {fileID: 627004179952619809}
   - component: {fileID: 9149361583021617883}
   - component: {fileID: 8195296584383862301}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Blade1 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -464,7 +464,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8116077443151301447}
   - component: {fileID: 7959279143562907456}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Blades
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -503,7 +503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseSpeed: 50
-  windSettings: {fileID: 11400000, guid: 2de56347cc7a2eb4c899d99b739a9fc3, type: 2}
+  associatedWindSettings: {fileID: 0}
 --- !u!1 &7257277885151308331
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 4808404518567257249}
   - component: {fileID: 1176006105422352491}
   - component: {fileID: 7124674212874419492}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Blade1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -621,7 +621,7 @@ GameObject:
   - component: {fileID: 5363102878235393375}
   - component: {fileID: 1762540062242600174}
   - component: {fileID: 1016468724249878258}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
