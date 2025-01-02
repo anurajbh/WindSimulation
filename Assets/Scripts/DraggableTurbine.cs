@@ -74,7 +74,7 @@ public class DraggableTurbine : MonoBehaviour
             Vector3 newPosition = hit.point + offset;
 
             // Example constraint to only drag on XZ plane (optional, remove if 3D movement is needed)
-            newPosition.y = turbineParent.position.y;
+            //newPosition.y = turbineParent.position.y;
 
             turbineParent.position = newPosition;
         }

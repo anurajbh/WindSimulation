@@ -109,11 +109,11 @@ public class PowerGenerator : MonoBehaviour
     {
         return currentPowerOutput; 
     }
-    private void OnDrawGizmos()
+    /*private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, CalculateBladeRadius());
-    }
+    }*/
     private void OnEnable()
     {
         if (TurbineSelectDropdown.Instance != null)
