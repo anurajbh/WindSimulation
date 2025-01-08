@@ -13,7 +13,7 @@ public class WindSettingsFactory : MonoSingleton<WindSettingsFactory>
     public TMP_InputField speedField;
     public TMP_InputField turbulenceField;
     public TMP_InputField intervalField;
-
+    public WindDropdown windDropdown;
     public void OnCreateWindSettingsButton()
     {
         // Fetch input values
@@ -26,6 +26,9 @@ public class WindSettingsFactory : MonoSingleton<WindSettingsFactory>
         WindSettings newSettings = CreateNewWindSettings(name, windSpeed, turbulence, deltaTime);
         SaveWindSettings(newSettings);
         Debug.Log($"New WindSettings created: {newSettings.name} with Speed: {newSettings.defaultWindSpeed}, Turbulence: {newSettings.defaultTurbulence}");
+        // Add the new settings to the WindManager's list
+        WindManager.Instance.windSettings.Add(newSettings);
+        windDropdown.PopulateDropdown();
     }
 
     public WindSettings CreateNewWindSettings(string name, float windSpeed, float turbulence, float deltaTime)
@@ -90,6 +93,7 @@ public class WindSettingsFactory : MonoSingleton<WindSettingsFactory>
         newSettings.maxTurbulence = data.maxTurbulence;
 
         Debug.Log($"Wind settings loaded from: {path}");
+
         return newSettings;
     }
     public void OnLoadWindSettingsButton()
@@ -99,6 +103,9 @@ public class WindSettingsFactory : MonoSingleton<WindSettingsFactory>
 
         if (loadedSettings != null)
         {
+            WindManager.Instance.windSettings.Add(loadedSettings);
+            // Refresh the dropdown
+            windDropdown.PopulateDropdown();
             Debug.Log($"Loaded WindSettings: {loadedSettings.name} with Speed: {loadedSettings.defaultWindSpeed}, Turbulence: {loadedSettings.defaultTurbulence}");
         }
     }

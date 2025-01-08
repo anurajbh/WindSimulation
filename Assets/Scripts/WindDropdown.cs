@@ -19,14 +19,21 @@ public class WindDropdown : MonoBehaviour
             Debug.Log("No Wind Manager");
             return;
         }
+        PopulateDropdown();
+        dropdown.onValueChanged.AddListener(SwitchWindSettings);
+    }
+
+    public void PopulateDropdown()
+    {
+        dropdown.ClearOptions();
         List<string> options = new List<string>();
         for (int i = 0; i < WindManager.Instance.windSettings.Count; i++)
         {
             options.Add(WindManager.Instance.windSettings[i].name);
         }
         dropdown.AddOptions(options);
-        dropdown.onValueChanged.AddListener(SwitchWindSettings);
     }
+
     void SwitchWindSettings(int index)
     {
         if (index < 0)

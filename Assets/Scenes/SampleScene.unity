@@ -7600,6 +7600,7 @@ MonoBehaviour:
   speedField: {fileID: 246615535}
   turbulenceField: {fileID: 641765741}
   intervalField: {fileID: 858290430}
+  windDropdown: {fileID: 765080382}
 --- !u!1 &1446802336
 GameObject:
   m_ObjectHideFlags: 0
