@@ -5,7 +5,7 @@ using UnityEngine;
 public class WindTurbineBlades : MonoBehaviour
 {
     [Header("Blade Rotation Speed Multiplier")]
-    [SerializeField] float baseSpeed = 50f;
+    public float baseSpeed = 50f;
     [Header("Wind Zone Association")]
     public WindSettings associatedWindSettings;
     // Update is called once per frame
