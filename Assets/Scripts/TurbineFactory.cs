@@ -12,7 +12,7 @@ public class TurbineFactory : MonoBehaviour
     public TMP_InputField transformField;
     public TMP_InputField speedField;
     public TMP_InputField efficiencyField;
-    //public TurbineSelectDropdown turbineDropdown;
+    public TurbineSelectDropdown turbineDropdown;
     // Start is called before the first frame update
     public void OnTurbineCreateButton()
     {
@@ -45,6 +45,6 @@ public class TurbineFactory : MonoBehaviour
         }
         turbineBlades.associatedWindSettings = WindManager.Instance.currentWindSettings;
         turbineBlades.baseSpeed = turbineBaseSpeed;
-
+        turbineDropdown.RegisterTurbine(turbineGenerator);
     }
 }

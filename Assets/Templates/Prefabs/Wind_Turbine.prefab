@@ -484,6 +484,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8116077443151301447}
   - component: {fileID: 7959279143562907456}
+  - component: {fileID: 8054209174231233580}
   m_Layer: 6
   m_Name: Blades
   m_TagString: Untagged
@@ -524,6 +525,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseSpeed: 50
   associatedWindSettings: {fileID: 0}
+--- !u!114 &8054209174231233580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7210337124475318529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 660d9e7470fc2924d8d6ef313956b1af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  efficiency: 0.4
+  currentPowerOutput: 0
+  totalEnergyProduced: 0
+  bladeRadius: 0
 --- !u!1 &7257277885151308331
 GameObject:
   m_ObjectHideFlags: 0

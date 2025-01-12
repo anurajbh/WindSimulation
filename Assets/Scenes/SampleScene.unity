@@ -12550,7 +12550,8 @@ PrefabInstance:
       propertyPath: associatedWindSettings
       value: 
       objectReference: {fileID: 11400000, guid: 2de56347cc7a2eb4c899d99b739a9fc3, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8054209174231233580, guid: 866f198516b453f43b2488671803119e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -12723,6 +12724,7 @@ MonoBehaviour:
   transformField: {fileID: 537766710}
   speedField: {fileID: 411437726}
   efficiencyField: {fileID: 2113457185}
+  turbineDropdown: {fileID: 520240811}
 --- !u!1 &2004070156
 GameObject:
   m_ObjectHideFlags: 0
@@ -13544,11 +13546,16 @@ PrefabInstance:
       propertyPath: associatedWindSettings
       value: 
       objectReference: {fileID: 11400000, guid: 2de56347cc7a2eb4c899d99b739a9fc3, type: 2}
+    - target: {fileID: 8054209174231233580, guid: 866f198516b453f43b2488671803119e, type: 3}
+      propertyPath: efficiency
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 8165334733644846560, guid: 866f198516b453f43b2488671803119e, type: 3}
       propertyPath: m_Layer
       value: 6
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8054209174231233580, guid: 866f198516b453f43b2488671803119e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
