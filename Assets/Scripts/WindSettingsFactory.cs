@@ -13,6 +13,10 @@ public class WindSettingsFactory : MonoSingleton<WindSettingsFactory>
     public TMP_InputField speedField;
     public TMP_InputField turbulenceField;
     public TMP_InputField intervalField;
+    public TMP_InputField gaussianWeightField;
+    public TMP_InputField perlinWeightField;
+    public TMP_InputField wfcWeightField;
+
     public WindDropdown windDropdown;
     public void OnCreateWindSettingsButton()
     {
@@ -21,9 +25,17 @@ public class WindSettingsFactory : MonoSingleton<WindSettingsFactory>
         float windSpeed = float.TryParse(speedField.text, out float parsedSpeed) ? parsedSpeed : defaultWindSettingsTemplate.defaultWindSpeed;
         float turbulence = float.TryParse(turbulenceField.text, out float parsedTurbulence) ? parsedTurbulence : defaultWindSettingsTemplate.defaultTurbulence;
         float deltaTime = float.TryParse(intervalField.text, out float parsedInterval) ? parsedInterval : 1f;
+        // Parse noise weights and normalize
+        float gaussianWeight = float.TryParse(gaussianWeightField.text, out float parsedGaussian) ? parsedGaussian : 0.33f;
+        float perlinWeight = float.TryParse(perlinWeightField.text, out float parsedPerlin) ? parsedPerlin : 0.33f;
+        float wfcWeight = float.TryParse(wfcWeightField.text, out float parsedWfc) ? parsedWfc : 0.34f;
+        float totalWeight = gaussianWeight + perlinWeight + wfcWeight;
+        gaussianWeight /= totalWeight;
+        perlinWeight /= totalWeight;
+        wfcWeight /= totalWeight;
 
         // Create new WindSettings
-        WindSettings newSettings = CreateNewWindSettings(name, windSpeed, turbulence, deltaTime);
+        WindSettings newSettings = CreateNewWindSettings(name, windSpeed, turbulence, deltaTime, gaussianWeight, perlinWeight, wfcWeight);
         SaveWindSettings(newSettings);
         Debug.Log($"New WindSettings created: {newSettings.name} with Speed: {newSettings.defaultWindSpeed}, Turbulence: {newSettings.defaultTurbulence}");
         // Add the new settings to the WindManager's list
@@ -31,7 +43,7 @@ public class WindSettingsFactory : MonoSingleton<WindSettingsFactory>
         windDropdown.PopulateDropdown();
     }
 
-    public WindSettings CreateNewWindSettings(string name, float windSpeed, float turbulence, float deltaTime)
+    public WindSettings CreateNewWindSettings(string name, float windSpeed, float turbulence, float deltaTime, float gaussianWeightage, float perlinWeightage, float wfcWeightage)
     {
         WindSettings newSettings = ScriptableObject.CreateInstance<WindSettings>();
         newSettings.InitWindZone();
@@ -45,6 +57,9 @@ public class WindSettingsFactory : MonoSingleton<WindSettingsFactory>
             newSettings.maxWindSpeed = defaultWindSettingsTemplate.maxWindSpeed;
             newSettings.minTurbulence = defaultWindSettingsTemplate.minTurbulence;
             newSettings.maxTurbulence = defaultWindSettingsTemplate.maxTurbulence;
+            newSettings.gaussianWeight = gaussianWeightage;
+            newSettings.perlinWeight = perlinWeightage;
+            newSettings.wfcWeight = wfcWeightage;
         }
 
         // Dynamically apply wind changes (optional)
