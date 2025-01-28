@@ -46,5 +46,28 @@ public class TurbineFactory : MonoBehaviour
         turbineBlades.associatedWindSettings = WindManager.Instance.currentWindSettings;
         turbineBlades.baseSpeed = turbineBaseSpeed;
         turbineDropdown.RegisterTurbine(turbineGenerator);
+        createdTurbine.transform.position = PlaceTurbineAtUserLocation();
+    }
+    public Vector3 PlaceTurbineAtUserLocation()
+    {
+        if (null == LocationServiceController.Instance)
+        {
+            Debug.LogWarning("No location services initialized. Placing Turbine at world origin");
+            return new Vector3(0, 0, 0);
+        }
+        // Ensure location services fetched valid coordinates
+        if (LocationServiceController.Instance.latitude == 0 && LocationServiceController.Instance.longitude == 0)
+        {
+            Debug.LogWarning("Invalid GPS coordinates. Placing Turbine at world origin.");
+            return new Vector3(0,0,0);
+        }
+
+
+        Vector3 turbinePosition = LocationServiceController.Instance.GPSCoordinateToWorldPosition(
+            LocationServiceController.Instance.latitude,
+            LocationServiceController.Instance.longitude
+        );
+        Debug.Log($"Turbine placed at world position {turbinePosition}");
+        return turbinePosition;
     }
 }
