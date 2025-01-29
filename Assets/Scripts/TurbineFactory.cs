@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using JetBrains.Annotations;
 public class TurbineFactory : MonoBehaviour
 {
     [Header("Wind Turbine Template")]
@@ -13,6 +15,8 @@ public class TurbineFactory : MonoBehaviour
     public TMP_InputField speedField;
     public TMP_InputField efficiencyField;
     public TurbineSelectDropdown turbineDropdown;
+    public List<TMP_InputField> coordinateFields;
+    public Toggle useManualCoordinates;
     // Start is called before the first frame update
     public void OnTurbineCreateButton()
     {
@@ -50,6 +54,13 @@ public class TurbineFactory : MonoBehaviour
     }
     public Vector3 PlaceTurbineAtUserLocation()
     {
+        if (useManualCoordinates.isOn)
+        {
+            float xPos = float.TryParse(coordinateFields[0].text, out xPos) ? xPos : 0.0f;
+            float yPos = float.TryParse(coordinateFields[1].text, out yPos) ? yPos : 0.0f;
+            float zPos = float.TryParse(coordinateFields[2].text, out zPos) ? zPos : 0.0f;
+            return new Vector3(xPos, yPos, zPos);
+        }
         if (null == LocationServiceController.Instance)
         {
             Debug.LogWarning("No location services initialized. Placing Turbine at world origin");
