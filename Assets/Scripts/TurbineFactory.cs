@@ -4,6 +4,9 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using JetBrains.Annotations;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
+
 public class TurbineFactory : MonoBehaviour
 {
     [Header("Wind Turbine Template")]
@@ -17,41 +20,83 @@ public class TurbineFactory : MonoBehaviour
     public TurbineSelectDropdown turbineDropdown;
     public List<TMP_InputField> coordinateFields;
     public Toggle useManualCoordinates;
-    // Start is called before the first frame update
+
+    private void Update()
+    {
+        // Handle AR touch placement when manual placement is disabled
+        if (!useManualCoordinates.isOn && Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                TryPlaceTurbineWithAR(touch.position);
+            }
+        }
+    }
+
     public void OnTurbineCreateButton()
     {
-        string name = nameField.text;
-        float turbineTransformSize = float.TryParse(transformField.text, out float transformSize) ? transformSize : 1.0f;
-        Vector3 turbineScale = new Vector3(transformSize, transformSize, turbineTransformSize);
-        float turbineBaseSpeed = float.TryParse(speedField.text, out float baseSpeed) ? baseSpeed : 1.0f;
-        float turbineEfficiency = float.TryParse(efficiencyField.text,out float efficiency) ? efficiency : 1.0f;
-        if (null == defaultTurbineTemplate)
+        if (useManualCoordinates.isOn)
         {
-            Debug.LogWarning($"No turbine template attached to Turbine Factory");
-            return;
+            Vector3 position = PlaceTurbineAtUserLocation();
+            InstantiateTurbine(position);
         }
-        GameObject createdTurbine = Instantiate(defaultTurbineTemplate);
-        createdTurbine.name = name;
-        defaultTurbineTemplate.transform.localScale = turbineScale;
-        PowerGenerator turbineGenerator = createdTurbine.GetComponentInChildren<PowerGenerator>();
-        if(null == turbineGenerator )
+        else
         {
-            Debug.LogWarning($"No Power Generator script attached to {createdTurbine.name}");
+            Debug.Log("AR-based placement is active. Tap on a detected plane to place a turbine.");
+        }
+    }
+
+    private void TryPlaceTurbineWithAR(Vector2 touchPosition)
+    {
+        if (TurbinePlacement.Instance.TryGetPlacementPosition(touchPosition, out Vector3 placementPosition))
+        {
+            InstantiateTurbine(placementPosition);
+        }
+        else
+        {
+            Debug.LogWarning("No valid AR surface detected.");
+        }
+    }
+
+    private void InstantiateTurbine(Vector3 position)
+    {
+        if (defaultTurbineTemplate == null)
+        {
+            Debug.LogWarning("No turbine template assigned in Turbine Factory!");
             return;
         }
 
-        turbineGenerator.efficiency = turbineEfficiency;
-        WindTurbineBlades turbineBlades = createdTurbine.GetComponentInChildren<WindTurbineBlades>();
-        if (null == turbineBlades)
+        GameObject createdTurbine = Instantiate(defaultTurbineTemplate, position, Quaternion.identity);
+
+        // Apply user-defined name
+        string turbineName = string.IsNullOrWhiteSpace(nameField.text) ? "Turbine" : nameField.text;
+        createdTurbine.name = turbineName;
+
+        // Apply transform size
+        float turbineTransformSize = float.TryParse(transformField.text, out float transformSize) ? transformSize : 1.0f;
+        createdTurbine.transform.localScale = new Vector3(transformSize, transformSize, transformSize);
+
+        // Apply base speed and efficiency
+        PowerGenerator turbineGenerator = createdTurbine.GetComponentInChildren<PowerGenerator>();
+        if (turbineGenerator != null)
         {
-            Debug.LogWarning($"No Wind Turbine Blades script attached to {createdTurbine.name}");
-            return;
+            turbineGenerator.efficiency = float.TryParse(efficiencyField.text, out float efficiency) ? Mathf.Clamp(efficiency, 0, 1) : 0.4f;
         }
-        turbineBlades.associatedWindSettings = WindManager.Instance.currentWindSettings;
-        turbineBlades.baseSpeed = turbineBaseSpeed;
+
+        WindTurbineBlades turbineBlades = createdTurbine.GetComponentInChildren<WindTurbineBlades>();
+        if (turbineBlades != null)
+        {
+            turbineBlades.baseSpeed = float.TryParse(speedField.text, out float baseSpeed) ? baseSpeed : 50f;
+            turbineBlades.associatedWindSettings = WindManager.Instance.currentWindSettings;
+        }
+
+        // Register turbine in selection dropdown
         turbineDropdown.RegisterTurbine(turbineGenerator);
-        createdTurbine.transform.position = PlaceTurbineAtUserLocation();
+
+        Debug.Log($"Turbine '{turbineName}' placed at: {position}");
     }
+
     public Vector3 PlaceTurbineAtUserLocation()
     {
         if (useManualCoordinates.isOn)
@@ -61,18 +106,17 @@ public class TurbineFactory : MonoBehaviour
             float zPos = float.TryParse(coordinateFields[2].text, out zPos) ? zPos : 0.0f;
             return new Vector3(xPos, yPos, zPos);
         }
-        if (null == LocationServiceController.Instance)
+        if (LocationServiceController.Instance == null)
         {
             Debug.LogWarning("No location services initialized. Placing Turbine at world origin");
-            return new Vector3(0, 0, 0);
+            return Vector3.zero;
         }
-        // Ensure location services fetched valid coordinates
+
         if (LocationServiceController.Instance.latitude == 0 && LocationServiceController.Instance.longitude == 0)
         {
             Debug.LogWarning("Invalid GPS coordinates. Placing Turbine at world origin.");
-            return new Vector3(0,0,0);
+            return Vector3.zero;
         }
-
 
         Vector3 turbinePosition = LocationServiceController.Instance.GPSCoordinateToWorldPosition(
             LocationServiceController.Instance.latitude,
